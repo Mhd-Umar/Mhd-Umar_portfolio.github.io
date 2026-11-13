@@ -194,7 +194,7 @@ h1 span { color: var(--plum); }
 .ghcode { margin: 1.6rem 0 1.4rem; }
 .btn.lg { font-size: 1.15rem; padding: 1.05rem 2rem; gap: .75rem; box-shadow: 0 8px 24px var(--glow); }
 @media (max-width: 560px) { .btn.lg { font-size: 1.05rem; padding: 1rem 1.4rem; justify-content: center; } }
-.vidbox { margin: 0 0 2.5rem; padding: 1.2rem; border: 1px solid var(--line); border-radius: 1.1rem; background: var(--card); }
+.vidbox { margin: 1.4rem 0 0; padding: 1.2rem; border: 1px solid var(--line); border-radius: 1.1rem; background: var(--card); }
 .vidbox h4 { font: 500 .74rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 0 .3rem; }
 .vidbox p { margin: 0 0 .9rem; color: var(--muted); max-width: 60ch; }
 .vidbox video { display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: .8rem; background: #0b1418; border: 1px solid var(--line); }
@@ -582,18 +582,17 @@ open to work</pre>
         <button class="big" id="big" type="button" aria-label="Open the screenshot full size"><img id="bigImg" src="01-home.jpg" alt=""><span class="zoom">Tap to enlarge</span></button>
         <p class="cap" id="cap"></p>
         <div class="thumbs" id="thumbs"></div>
-      </div>
-    </article>
-
-    <div class="vidbox rv" id="resovideo">
+        <div class="vidbox" id="resovideo">
       <h4>Video walkthrough</h4>
-      <p>A 1 minute 38 second narrated screen tour of ResoTrack: student, lab admin and main admin screens, with the complaint and stock flow.</p>
+      <p>A narrated screen tour of ResoTrack: student, lab admin and main admin screens, with the complaint and stock flow.</p>
       <video controls preload="none" playsinline poster="resotrack-video-poster.jpg" aria-label="ResoTrack project walkthrough video">
         <source src="ResoTrack_Walkthrough.mp4" type="video/mp4">
         Your browser cannot play this video. You can download it with the button below.
       </video>
       <div class="btns"><a class="btn" href="ResoTrack_Walkthrough.mp4" download>Download video (MP4)</a></div>
     </div>
+      </div>
+    </article>
 
     <article class="case">
       <div class="rv">
