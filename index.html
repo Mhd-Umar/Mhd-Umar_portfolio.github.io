@@ -990,7 +990,7 @@ open to work</pre>
   // contact form
   (function () {
     var f = $('#mform'); if (!f) return;
-    var W3KEY = '', /* paste your free Web3Forms access key between the quotes to skip FormSubmit activation */
+    var W3KEY = '268c04eb-b4a9-4e61-8a8d-828cc4b30b0e', /* paste your free Web3Forms access key between the quotes to skip FormSubmit activation */
         TO = 'umarofcl10@gmail.com', btn = $('#msend'), st = $('#mstatus'), ok = $('#mok'), cnt = $('#cnt'), msg = $('#f-message'), last = 0;
     msg.addEventListener('input', function () { cnt.textContent = msg.value.length + ' / 2000'; });
     function bad(id, text) { var el = $('#' + id), box = el.closest('.fld'); box.classList.toggle('bad', !!text); $('#e-' + id.slice(2)).textContent = text || ''; return !text; }
