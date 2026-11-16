@@ -694,7 +694,7 @@ open to work</pre>
       <p class="mline">Prefer email? <strong>umarofcl10@gmail.com</strong></p>
     </div>
     <form class="mform card rv" id="mform" novalidate>
-      <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+      <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
       <div class="fr">
         <div class="fld"><label for="f-name">Name</label><input id="f-name" name="name" type="text" autocomplete="name" maxlength="80" required placeholder="Your name"><small class="err" id="e-name"></small></div>
         <div class="fld"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" maxlength="120" required placeholder="you@example.com"><small class="err" id="e-email"></small></div>
@@ -990,7 +990,7 @@ open to work</pre>
   // contact form
   (function () {
     var f = $('#mform'); if (!f) return;
-    var W3KEY = '268c04eb-b4a9-4e61-8a8d-828cc4b30b0e', /* paste your free Web3Forms access key between the quotes to skip FormSubmit activation */
+    var W3KEY = '268c04eb-b4a9-4e61-8a8d-828cc4b30b0e',
         TO = 'umarofcl10@gmail.com', btn = $('#msend'), st = $('#mstatus'), ok = $('#mok'), cnt = $('#cnt'), msg = $('#f-message'), last = 0;
     msg.addEventListener('input', function () { cnt.textContent = msg.value.length + ' / 2000'; });
     function bad(id, text) { var el = $('#' + id), box = el.closest('.fld'); box.classList.toggle('bad', !!text); $('#e-' + id.slice(2)).textContent = text || ''; return !text; }
@@ -1009,24 +1009,25 @@ open to work</pre>
     }
     f.addEventListener('submit', function (ev) {
       ev.preventDefault(); st.className = 'mst'; st.textContent = '';
-      if (f.querySelector('[name=_honey]').value) return;
+      if (f.querySelector('[name=botcheck]').checked) return;
       if (!validate()) { st.className = 'mst bad'; st.textContent = 'Please fix the highlighted fields.'; return; }
       if (Date.now() - last < 8000) { st.textContent = 'Please wait a few seconds before sending again.'; return; }
       var n = $('#f-name').value.trim(), e = $('#f-email').value.trim(), s = $('#f-subject').value.trim(), m = msg.value.trim();
       btn.disabled = true; btn.classList.add('busy'); st.textContent = 'Sending...';
       var ctl = window.AbortController ? new AbortController() : null, to = setTimeout(function () { if (ctl) ctl.abort(); }, 15000);
-      var url = W3KEY ? 'https://api.web3forms.com/submit' : 'https://formsubmit.co/ajax/' + TO;
-      var payload = W3KEY
-        ? { access_key: W3KEY, name: n, email: e, subject: 'Portfolio message: ' + s, message: m, from_name: 'Portfolio website' }
-        : { name: n, email: e, subject: s, message: m, _subject: 'Portfolio message: ' + s, _template: 'table', _captcha: 'false', _replyto: e };
-      fetch(url, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, signal: ctl ? ctl.signal : undefined,
-        body: JSON.stringify(payload)
-      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); }).then(function (x) {
-        clearTimeout(to);
-        if (x.ok && (x.j.success === true || x.j.success === 'true')) { last = Date.now(); f.reset(); cnt.textContent = '0 / 2000'; st.textContent = ''; ok.hidden = false; }
-        else { st.className = 'mst bad'; st.textContent = (x.j && x.j.message) ? x.j.message : 'Sending failed. Please try again.'; }
-      }).catch(function () { clearTimeout(to); fallback(n, e, s, m); }).then(function () { btn.disabled = false; btn.classList.remove('busy'); });
+      function post(url, payload) {
+        return fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, signal: ctl ? ctl.signal : undefined, body: JSON.stringify(payload) })
+          .then(function (r) { return r.text().then(function (t) { var j = {}; try { j = JSON.parse(t); } catch (x) {} return { ok: r.ok, j: j }; }); });
+      }
+      function good(x) { return x.ok && (x.j.success === true || x.j.success === 'true'); }
+      function done() { clearTimeout(to); btn.disabled = false; btn.classList.remove('busy'); }
+      post('https://api.web3forms.com/submit', { access_key: W3KEY, name: n, email: e, subject: 'Portfolio message: ' + s, message: m, from_name: 'Portfolio website' })
+        .then(function (x) { if (good(x)) return x; return post('https://formsubmit.co/ajax/' + TO, { name: n, email: e, subject: s, message: m, _subject: 'Portfolio message: ' + s, _template: 'table', _captcha: 'false', _replyto: e }); })
+        .catch(function () { return post('https://formsubmit.co/ajax/' + TO, { name: n, email: e, subject: s, message: m, _subject: 'Portfolio message: ' + s, _template: 'table', _captcha: 'false', _replyto: e }); })
+        .then(function (x) {
+          if (good(x)) { last = Date.now(); f.reset(); cnt.textContent = '0 / 2000'; st.textContent = ''; ok.hidden = false; }
+          else fallback(n, e, s, m);
+        }).catch(function () { fallback(n, e, s, m); }).then(done);
     });
     $('#mnew').addEventListener('click', function () { ok.hidden = true; $('#f-name').focus(); });
   })();
